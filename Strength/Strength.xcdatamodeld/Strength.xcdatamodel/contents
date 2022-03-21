@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="21C52" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Exercise" representedClassName="Exercise" syncable="YES" codeGenerationType="class">
+        <attribute name="bodyPart" optional="YES" attributeType="String"/>
+        <attribute name="displayOrder" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="exerciseDetails" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ExerciseDetails" inverseName="exercises" inverseEntity="ExerciseDetails"/>
+        <relationship name="exerciseSets" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ExerciseSet" inverseName="exercise" inverseEntity="ExerciseSet"/>
+        <relationship name="workout" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Workout" inverseName="exercises" inverseEntity="Workout"/>
+    </entity>
+    <entity name="ExerciseDetails" representedClassName="ExerciseDetails" syncable="YES" codeGenerationType="class">
+        <attribute name="bodyPart" optional="YES" attributeType="String"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="exercises" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Exercise" inverseName="exerciseDetails" inverseEntity="Exercise"/>
+        <relationship name="templateExercises" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TemplateExercise" inverseName="exerciseDetails" inverseEntity="TemplateExercise"/>
+    </entity>
+    <entity name="ExerciseSet" representedClassName="ExerciseSet" syncable="YES" codeGenerationType="class">
+        <attribute name="failure" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="order" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="reps" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="warmUp" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="weight" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="exercise" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Exercise" inverseName="exerciseSets" inverseEntity="Exercise"/>
+    </entity>
+    <entity name="Template" representedClassName="Template" syncable="YES" codeGenerationType="class">
+        <attribute name="created" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="lastUsed" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="exercises" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TemplateExercise" inverseName="template" inverseEntity="TemplateExercise"/>
+        <relationship name="workouts" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Workout" inverseName="template" inverseEntity="Workout"/>
+    </entity>
+    <entity name="TemplateExercise" representedClassName="TemplateExercise" syncable="YES" codeGenerationType="class">
+        <attribute name="displayOrder" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="exerciseDetails" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ExerciseDetails" inverseName="templateExercises" inverseEntity="ExerciseDetails"/>
+        <relationship name="template" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Template" inverseName="exercises" inverseEntity="Template"/>
+        <relationship name="templateExerciseSet" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TemplateExerciseSet" inverseName="templateExercise" inverseEntity="TemplateExerciseSet"/>
+    </entity>
+    <entity name="TemplateExerciseSet" representedClassName="TemplateExerciseSet" syncable="YES" codeGenerationType="class">
+        <attribute name="order" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="reps" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="weight" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="templateExercise" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TemplateExercise" inverseName="templateExerciseSet" inverseEntity="TemplateExercise"/>
+    </entity>
+    <entity name="Workout" representedClassName="Workout" syncable="YES" codeGenerationType="class">
+        <attribute name="finished" optional="YES" attributeType="Date" defaultDateTimeInterval="-978310800" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="notes" optional="YES" attributeType="String"/>
+        <attribute name="started" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="workoutLive" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
+        <relationship name="exercises" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Exercise" inverseName="workout" inverseEntity="Exercise"/>
+        <relationship name="template" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Template" inverseName="workouts" inverseEntity="Template"/>
+    </entity>
+    <elements>
+        <element name="Exercise" positionX="-54" positionY="27" width="128" height="119"/>
+        <element name="ExerciseSet" positionX="-36" positionY="45" width="128" height="119"/>
+        <element name="Template" positionX="-27" positionY="99" width="128" height="104"/>
+        <element name="Workout" positionX="-63" positionY="-18" width="128" height="134"/>
+        <element name="ExerciseDetails" positionX="-54" positionY="90" width="128" height="89"/>
+        <element name="TemplateExercise" positionX="-45" positionY="99" width="128" height="89"/>
+        <element name="TemplateExerciseSet" positionX="-27" positionY="108" width="128" height="89"/>
+    </elements>
+</model>
