@@ -14,45 +14,64 @@ struct ExerciseView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.editMode) private var editMode
     @FetchRequest var exerciseSets: FetchedResults<ExerciseSet>
-    
+    @State var showListItems = false
+    @State var animationDelay = 0.5
     init(exercise: Exercise) {
         self.exercise = exercise
         _exerciseSets = FetchRequest(
             entity: ExerciseSet.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \ExerciseSet.order, ascending: true)], predicate: NSPredicate(format: "exercise == %@",exercise))
     }
     
+    let screenSize = UIScreen.main.bounds
+    
     var body: some View {
-        HStack {
-            VStack {
-                HStack {
-                    Text(exercise.exerciseDetails?.name ?? "")
-                    Spacer()
-                    Text(exercise.exerciseDetails?.bodyPart ?? "")
-                    Spacer()
-                    if (editMode?.wrappedValue.isEditing == true) {
-                        Image(systemName: "xmark.bin.fill")
-                            .onTapGesture {
-                                deleteExercise()
-                            }
+        ZStack {
+            Rectangle()
+                .foregroundColor(Color("ListItem"))
+                .cornerRadius(20)
+                .shadow(color: Color("Shadow"), radius: 4, x: 0, y: 3)
+            HStack {
+                VStack {
+                    HStack {
+                        Text(exercise.exerciseDetails?.name ?? "")
+                        Spacer()
+                        Text(exercise.exerciseDetails?.bodyPart ?? "")
+                        
+                        if (editMode?.wrappedValue.isEditing == true) {
+                            Spacer()
+                            Image(systemName: "xmark.bin.fill")
+                                .onTapGesture {
+                                    withAnimation(.easeOut){
+                                        deleteExercise()
+                                    }
+                                }
+                        }
+                    }.font(.headline)
+                    Divider()
+                    ForEach(exerciseSets) { exerciseSet in
+                        ExerciseSetView(set:exerciseSet)
+//                            .animation(Animation.easeOut(duration: 0.6).delay(0.5), value: showListItems)
+//                        Divider()
                     }
-                }.font(.headline)
-                Divider()
-                ForEach(exerciseSets) { exerciseSet in
-
-                    ExerciseSetView(set:exerciseSet)
-                            .frame(height:50)
-                        Divider()
-                }
-                
-                HStack{
-                    Text("Add Set")
-                    Image(systemName: "plus")
-                }.onTapGesture {
-                    addSet()
-            }
                     
-        }.padding()
-    }
+                    HStack{
+                        Spacer()
+                        Text("Add Set")
+                        Image(systemName: "plus")
+                        Spacer()
+                    }
+                    .onTapGesture {
+                        withAnimation(.linear(duration: 0.1)){
+                            addSet()
+                        }
+                    }
+                    
+                }.padding()
+                .onTapGesture{
+                    self.hideKeyboard()
+                }
+            }
+        }
     }
     
     func deleteExercise(){
@@ -81,6 +100,14 @@ struct ExerciseView: View {
         }
     }
 }
+
+#if canImport(UIKit)
+extension View {
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
+#endif
 
 struct ExerciseView_Previews: PreviewProvider {
     static let moc = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)

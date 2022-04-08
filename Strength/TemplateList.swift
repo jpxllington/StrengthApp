@@ -24,13 +24,17 @@ struct TemplateList: View {
     var body: some View {
         if templates.count == 0 {
             Text("No Templates Added")
+        } else {
+            ZStack {
+                Color.blue
+                List{
+                    ForEach(templates) { template in
+                        TemplateRow(template:template)
+                    }.onDelete(perform: deleteTemplate)
+                }
+                .background(Color.blue)
+            }
         }
-        List{
-            ForEach(templates) { template in
-                TemplateRow(template:template)
-            }.onDelete(perform: deleteTemplate)
-        }
-        
     }
     
     func deleteTemplate(at offsets: IndexSet){

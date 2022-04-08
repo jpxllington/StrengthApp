@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreData
+import Introspect
 
 struct WorkoutView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
@@ -16,6 +17,7 @@ struct WorkoutView: View {
     @State var isTimerRunning = false
     @State var interval = TimeInterval()
     @State var showAlert: Bool = false
+    @State var showDeleteAlert: Bool = false
     @State var workoutStart: Date = Date()
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
@@ -47,46 +49,52 @@ struct WorkoutView: View {
             List{
                ForEach(exercises) { exercise in
                    ExerciseView(exercise: exercise)
+                       
                }.onMove(perform: moveWorkout)
                     .padding(.leading, self.editMode?.wrappedValue.isEditing ?? false ? -45 : 0)
-//                ForEach(Array(workout.exercises as? Set<Exercise> ?? [] ), id: \.self) { exercise in
-//                    ExerciseView(exercise: exercise)
-//
-//                }
-                
+                    .listRowSeparator(.hidden)
             }.listStyle(.inset)
+                
             if(editMode?.wrappedValue.isEditing == true){
-                HStack {
-                    Spacer()
-                    Text("Delete Workout").onTapGesture {
-                        deleteWorkout()
-                    }.foregroundColor(.red)
-                    Spacer()
+                ZStack {
+                    Rectangle()
+                        .foregroundColor(.red)
+                        .frame(height: 50)
+                        .cornerRadius(5)
+                    HStack {
+                        Spacer()
+                        Text("Delete Workout").onTapGesture {
+                            showDeleteAlert.toggle()
+                        }.foregroundColor(.white)
+                        Spacer()
+                    }.frame(height: 50)
+                        
                 }
+              
             }
         }
-//        List(Array(workout.exercises as? Set<Exercise> ?? [] ), id: \.self) { exercise in
-//            ExerciseView(exercise: exercise)
-//        }
+//        .background(Color.blue)
         .navigationBarItems(trailing:
-                                HStack(spacing: 20) {
-            
-            Text(formatter.string(from: interval) ?? "")
-                .onReceive(timer) {_ in
-                    if self.isTimerRunning {
+            HStack(spacing: 20) {
+            if self.isTimerRunning {
+                Text(formatter.string(from: interval) ?? "")
+                    .onReceive(timer) {_ in
                         interval = Date().timeIntervalSince(workoutStart)
-                    }
                 }
-            Button(action: {showAlert.toggle()}, label: {Text("Finish")})
-                .alert("Would you like to update the template?", isPresented: $showAlert){
-                    Button("Yes"){
-                        finishWorkout()
-                        updateTemplate()
+                Button(action: {showAlert.toggle()}, label: {Text("Finish")})
+                    .alert("Would you like to update the template?", isPresented: $showAlert){
+                        Button("Yes"){
+                            finishWorkout()
+                            updateTemplate()
+                        }
+                        Button("No"){
+                            finishWorkout()
+                        }
                     }
-                    Button("No"){
-                        finishWorkout()
-                    }
-                }
+            } else if workout.finished != nil {
+                Text(calcDuration())
+                Spacer(minLength: 25)
+            }
             EditButton()
             Button(action: {
                 self.presentAddNewExercise.toggle()
@@ -97,13 +105,28 @@ struct WorkoutView: View {
             }
                     
         })
-        
+        .alert("Are you sure you want to delete this workout?", isPresented: $showDeleteAlert){
+            Button("Yes"){
+                deleteWorkout()
+                showDeleteAlert.toggle()
+            }
+            Button("No"){
+                showDeleteAlert.toggle()
+            }
+        }
+
         .navigationBarTitle(workout.name ?? "")
         .font(.subheadline)
+        
         .onAppear(perform: {if workout.workoutLive == true {
             isTimerRunning = true
             workoutStart = workout.started!
+            
+
         }})
+        .onDisappear(perform: {isTimerRunning = false
+            
+        })
     }
     
     func moveWorkout(from source: IndexSet, to destination: Int){
@@ -130,6 +153,13 @@ struct WorkoutView: View {
             }
         }
     }
+    func calcDuration() -> String{
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .abbreviated
+        formatter.allowedUnits = [.hour, .minute, .second]
+        return formatter.string(from: workout.started!, to: workout.finished!)!
+    }
+    
     
     func deleteWorkout(){
         managedObjectContext.delete(workout)

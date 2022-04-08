@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="21C52" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21E230" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Exercise" representedClassName="Exercise" syncable="YES" codeGenerationType="class">
         <attribute name="bodyPart" optional="YES" attributeType="String"/>
         <attribute name="displayOrder" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
@@ -15,10 +15,11 @@
         <relationship name="templateExercises" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TemplateExercise" inverseName="exerciseDetails" inverseEntity="TemplateExercise"/>
     </entity>
     <entity name="ExerciseSet" representedClassName="ExerciseSet" syncable="YES" codeGenerationType="class">
-        <attribute name="failure" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="failure" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="order" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="reps" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="warmUp" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="saved" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="warmUp" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="weight" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="exercise" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Exercise" inverseName="exerciseSets" inverseEntity="Exercise"/>
     </entity>
@@ -42,7 +43,7 @@
         <relationship name="templateExercise" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TemplateExercise" inverseName="templateExerciseSet" inverseEntity="TemplateExercise"/>
     </entity>
     <entity name="Workout" representedClassName="Workout" syncable="YES" codeGenerationType="class">
-        <attribute name="finished" optional="YES" attributeType="Date" defaultDateTimeInterval="-978310800" usesScalarValueType="NO"/>
+        <attribute name="finished" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="notes" optional="YES" attributeType="String"/>
         <attribute name="started" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -52,11 +53,11 @@
     </entity>
     <elements>
         <element name="Exercise" positionX="-54" positionY="27" width="128" height="119"/>
-        <element name="ExerciseSet" positionX="-36" positionY="45" width="128" height="119"/>
-        <element name="Template" positionX="-27" positionY="99" width="128" height="104"/>
-        <element name="Workout" positionX="-63" positionY="-18" width="128" height="134"/>
         <element name="ExerciseDetails" positionX="-54" positionY="90" width="128" height="89"/>
+        <element name="ExerciseSet" positionX="-36" positionY="45" width="128" height="134"/>
+        <element name="Template" positionX="-27" positionY="99" width="128" height="104"/>
         <element name="TemplateExercise" positionX="-45" positionY="99" width="128" height="89"/>
         <element name="TemplateExerciseSet" positionX="-27" positionY="108" width="128" height="89"/>
+        <element name="Workout" positionX="-63" positionY="-18" width="128" height="134"/>
     </elements>
 </model>

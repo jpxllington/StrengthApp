@@ -24,7 +24,8 @@ struct TemplateRow: View {
                 .sheet(isPresented: $showSummary){
                     PreWorkoutSummaryView(template:template, showSummary: $showSummary, navActive:$navActive)
                 }
-            }.background(NavigationLink(destination: NewWorkoutPage(sortDescriptor: NSSortDescriptor(keyPath: \Workout.started, ascending: false)), isActive: $navActive ) {})
+            }
+            .background(NavigationLink(destination: NewWorkoutPage(sortDescriptor: NSSortDescriptor(keyPath: \Workout.started, ascending: false)), isActive: $navActive ) {})
             .padding()
         
     }

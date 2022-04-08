@@ -11,15 +11,10 @@ import CoreData
 struct ContentView: View {
     @State private var selection = 1
     @State private var showActiveWorkout: Bool = false
-//    @Environment(\.managedObjectContext) private var viewContext
-
-//    @FetchRequest(
-//        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
-//        animation: .default)
-//    private var items: FetchedResults<Item>
 
     var body: some View {
         TabView(selection: $selection){
+            
             WorkoutMenu(tabSelection: $selection, activeWorkout: $showActiveWorkout)
                 .tabItem{
                     Image(systemName: "flame")
@@ -32,7 +27,7 @@ struct ContentView: View {
                         Text("Active Workout")
                     }.tag(3)
             }
-            Text("Summary")
+            SummaryPage()
                 .tabItem{
                     Image(systemName: "house.fill")
                     Text("Summary")
@@ -42,73 +37,101 @@ struct ContentView: View {
                     Image(systemName: "clock.fill")
                     Text("History")
                 }.tag(2)
-           
-            
+                
         }
-        
-//        NavigationView {
-//            List {
-//                ForEach(items) { item in
-//                    NavigationLink {
-//                        Text("Item at \(item.timestamp!, formatter: itemFormatter)")
-//                    } label: {
-//                        Text(item.timestamp!, formatter: itemFormatter)
-//                    }
-//                }
-//                .onDelete(perform: deleteItems)
-//            }
-//            .toolbar {
-//                ToolbarItem(placement: .navigationBarTrailing) {
-//                    EditButton()
-//                }
-//                ToolbarItem {
-//                    Button(action: addItem) {
-//                        Label("Add Item", systemImage: "plus")
-//                    }
-//                }
-//            }
-//            Text("Select an item")
-//        }
+       
     }
-
-//    private func addItem() {
-//        withAnimation {
-//            let newItem = Item(context: viewContext)
-//            newItem.timestamp = Date()
-//
-//            do {
-//                try viewContext.save()
-//            } catch {
-//                // Replace this implementation with code to handle the error appropriately.
-//                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-//                let nsError = error as NSError
-//                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-//            }
-//        }
-//    }
-
-//    private func deleteItems(offsets: IndexSet) {
-//        withAnimation {
-//            offsets.map { items[$0] }.forEach(viewContext.delete)
-//
-//            do {
-//                try viewContext.save()
-//            } catch {
-//                // Replace this implementation with code to handle the error appropriately.
-//                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-//                let nsError = error as NSError
-//                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-//            }
-//        }
-//    }
 }
 
-//private let itemFormatter: DateFormatter = {
-//    let formatter = DateFormatter()
-//    formatter.dateStyle = .short
-//    formatter.timeStyle = .medium
-//    return formatter
-//}()
+// Colours top navigation bar across all screens
+
+//extension UINavigationController {
+//    override open func viewDidLoad() {
+//        super.viewDidLoad()
+//
+//    let standard = UINavigationBarAppearance()
+//    standard.backgroundColor = .red //When you scroll or you have title (small one)
+//
+//    let compact = UINavigationBarAppearance()
+//    compact.backgroundColor = .green //compact-height
+//
+//    let scrollEdge = UINavigationBarAppearance()
+//    scrollEdge.backgroundColor = .blue //When you have large title
+//
+//    navigationBar.standardAppearance = standard
+//    navigationBar.compactAppearance = compact
+//    navigationBar.scrollEdgeAppearance = scrollEdge
+// }
+//}
+
+extension UIApplication {
+    var key: UIWindow? {
+        self.connectedScenes
+            .map({$0 as? UIWindowScene})
+            .compactMap({$0})
+            .first?
+            .windows
+            .filter({$0.isKeyWindow})
+            .first
+    }
+}
+
+
+extension UIView {
+    func allSubviews() -> [UIView] {
+        var subs = self.subviews
+        for subview in self.subviews {
+            let rec = subview.allSubviews()
+            subs.append(contentsOf: rec)
+        }
+        return subs
+    }
+}
+    
+
+struct TabBarModifier {
+    static func showTabBar() {
+        UIApplication.shared.key?.allSubviews().forEach({ subView in
+            if let view = subView as? UITabBar {
+                view.isHidden = false
+            }
+        })
+    }
+    
+    static func hideTabBar() {
+        UIApplication.shared.key?.allSubviews().forEach({ subView in
+            if let view = subView as? UITabBar {
+                view.isHidden = true
+            }
+        })
+    }
+}
+
+struct ShowTabBar: ViewModifier {
+    func body(content: Content) -> some View {
+        return content.padding(.zero).onAppear {
+            TabBarModifier.showTabBar()
+        }
+    }
+}
+struct HiddenTabBar: ViewModifier {
+    func body(content: Content) -> some View {
+        return content.padding(.zero).onAppear {
+            TabBarModifier.hideTabBar()
+        }
+    }
+}
+
+extension View {
+    
+    func showTabBar() -> some View {
+        return self.modifier(ShowTabBar())
+    }
+
+    func hiddenTabBar() -> some View {
+        return self.modifier(HiddenTabBar())
+    }
+}
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

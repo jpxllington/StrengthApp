@@ -21,7 +21,9 @@ struct PreWorkoutSummaryView: View {
             VStack {
                 if template.exercises?.count == 0 {
                     Text("No Exercises Added")
-                        
+                        .fontWeight(.semibold)
+                    Text("Start workout to add exercises")
+                        .fontWeight(.light)
                 }
                 ForEach(Array(template.exercises as? Set<TemplateExercise> ?? [] ), id: \.self) { exercise in
                     HStack {

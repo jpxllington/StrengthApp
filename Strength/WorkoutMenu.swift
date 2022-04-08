@@ -17,16 +17,20 @@ struct WorkoutMenu: View {
     var body: some View {
         NavigationView {
             TemplateList(sortDescriptor: NSSortDescriptor(keyPath: \Template.created, ascending: false))
-                .navigationTitle("Saved Workouts")
-                .navigationBarItems(trailing:
-                                        Button(action: {
+                .navigationTitle("Workout Templates")
+                .toolbar{
+                    ToolbarItem(placement: .navigationBarTrailing){
+                        Button(action: {
                     self.presentAddNewWorkout.toggle()
-                }){
-                    Image(systemName: "plus.circle.fill")
-                }.sheet(isPresented: $presentAddNewWorkout) {
-                    AddTemplate(presentAddNewWorkout: self.$presentAddNewWorkout, tabSelection: self.$tabSelection, activeWorkout: self.$activeWorkout).environment(\.managedObjectContext, self.managedObjectContext)
+                        })
+                        {
+                            Image(systemName: "plus.circle.fill")
+                        }.sheet(isPresented: $presentAddNewWorkout) {
+                            AddTemplate(presentAddNewWorkout: self.$presentAddNewWorkout, tabSelection: self.$tabSelection, activeWorkout: self.$activeWorkout).environment(\.managedObjectContext, self.managedObjectContext)
+                            }
+                    }
                 }
-                )
+            
         }
     }
 }

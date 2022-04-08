@@ -15,27 +15,53 @@ struct WorkoutRow: View {
     var body: some View {
         HStack(spacing: 0) {
             NavigationLink(destination: WorkoutView(workout:workout)) {
-                VStack(alignment: .leading, spacing: 7) {
-                    Text(workout.name ?? "")
-                    Text(date)
+                ZStack {
+//                    Rectangle()
+//                        .foregroundColor(.white)
+//                        .cornerRadius(20)
+//                        .shadow(color: Color("Shadow"), radius: 4, x: 0, y: 3)
+                    VStack(alignment: .leading, spacing: 7) {
+                        HStack{
+                            Text(workout.name ?? "")
+                            Spacer()
+                            if workout.finished != nil{
+                                Text(calcDuration())
+                                Spacer()
+                            }
+                            Text(date)
+                        }
+                        ForEach(Array(workout.exercises as? Set<Exercise> ?? [] ), id: \.self) { exercise in
+                            HStack {
+    //                                Spacer()
+                                Text(String(exercise.exerciseSets!.count) + "x:" )
+                                Text(exercise.exerciseDetails!.name ?? "")
+                                
+                            }
+                         
+                        }
+                    }
                 }
             }
         }
-//        .onAppear(perform: dateFromString)
+        .onAppear(perform: dateFromString)
     }
     
-//    func dateFromString(){
-//        let formatter = DateFormatter()
-//        formatter.timeStyle = .medium
-//        formatter.dateStyle = .long
-//        if workout.isEmpty{
-//            return
-//        }
-//        date = formatter.string(from: workout.started!)
-//      
-//        
-//
-//    }
+    func calcDuration() -> String{
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .abbreviated
+        formatter.allowedUnits = [.hour, .minute, .second]
+        return formatter.string(from: workout.started!, to: workout.finished!)!
+    }
+    
+    func dateFromString(){
+        let formatter = DateFormatter()
+        formatter.timeStyle = .none
+        formatter.dateStyle = .long
+        date = formatter.string(from: workout.started!)
+      
+        
+
+    }
 }
 
 struct WorkoutRow_Previews: PreviewProvider {

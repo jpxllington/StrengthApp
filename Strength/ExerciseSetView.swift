@@ -17,6 +17,11 @@ struct ExerciseSetView: View {
     @State var numericWeight: Double = 0
     @State var numericReps: Int64 = 0
     let screenSize = UIScreen.main.bounds
+    @State var keyboardVisible: Bool = false
+    @State var menuVisible: Bool = false
+    @State var summarySheetVisible: Bool = false
+    @State var failed: Bool = false
+    @State var warmup: Bool = false
     
     @FetchRequest var exerciseSets: FetchedResults<ExerciseSet>
     
@@ -29,28 +34,103 @@ struct ExerciseSetView: View {
     
     
     var body: some View {
+            
+        ZStack {
             VStack {
                 HStack{
                     Image(systemName: "gear").onTapGesture {
-                        deleteSet()
+                        withAnimation(menuVisible ? .none : .linear(duration: 0.1)){
+                            menuVisible.toggle()
+                        }
                     }
-                    Spacer()
-                    Text(String(set.order))
-                    Spacer()
-                    Spacer()
+                    
+                    ZStack {
+                        Rectangle()
+                            .cornerRadius(5)
+                            .foregroundColor(failed ? warmup ? Color.orange : Color.red : warmup ? Color.yellow : Color("ListItem"))
+                            .frame(width: 20)
+                        Text(String(set.order))
+                    }
+                    
                     Section(header: Text("Weight:")){
                         TextField(String(set.weight), text: $weight)
+                            .keyboardType(.decimalPad)
+                            .background(Color("TextFieldBackground"))
+                            .cornerRadius(5)
+                            .multilineTextAlignment(.center)
+                            .shadow(color: .gray, radius: 0, x: 0, y: 0)
                     }
                     Section(header: Text("Reps:")){
                         TextField(String(set.reps), text: $reps)
+                            .keyboardType(.decimalPad)
+                            .background(Color("TextFieldBackground"))
+                            .cornerRadius(5)
+                            .multilineTextAlignment(.center)
+                            .shadow(color: Color("TextFieldBackground")	, radius: 0, x: 0, y: 0)
                     }
                     Image(systemName: saved ? "checkmark.seal.fill" : "checkmark.seal").onTapGesture {
                         validateData()
+                        keyboardVisible = false
                     }
+                }.onAppear(perform: {prefill()})
+                .background(saved ? Color("SavedSet") : Color("ListItem"))
+                    .cornerRadius(5)
+                .padding(.vertical, 5)
+                .frame(height:30)
+                if menuVisible {
+                    ZStack{
+                        Rectangle()
+                            .foregroundColor(Color("Background"))
+                            .cornerRadius(5)
+                        VStack{
+                            HStack{
+                               Image(systemName: "xmark.bin.fill")
+                               Text("Delete Set")
+                               Spacer()
+                            }.onTapGesture {
+                               deleteSet()
+                            }.padding(10)
+                            HStack{
+                               Image(systemName: "xmark.bin.fill")
+                               Text("Show Exercise Summary")
+                               Spacer()
+                            }.onTapGesture {
+                                summarySheetVisible.toggle()
+                            }.padding(10)
+                            HStack{
+                               Image(systemName: "xmark.bin.fill")
+                               Text("Mark as Failed")
+                               Spacer()
+                            }.onTapGesture {
+                                menuVisible.toggle()
+                                failed.toggle()
+                            }.padding(10)
+                            HStack{
+                               Image(systemName: "xmark.bin.fill")
+                               Text("Mark as Warmup")
+                               Spacer()
+                            }.onTapGesture {
+                                menuVisible.toggle()
+                                warmup.toggle()
+                            }.padding(10)
+                        }
+                    }.transition(.scale)
                 }
             }
+            .sheet(isPresented: $summarySheetVisible) {
+                ExerciseStatsView(exerciseDetails: (set.exercise?.exerciseDetails)!)
+            }
+        }
         
             
+    }
+    
+    func prefill() {
+        self.reps = String(set.reps)
+        self.weight = String(set.weight)
+        self.saved = set.saved
+        self.failed = set.failure
+        self.warmup = set.warmUp
     }
     func deleteSet(){
        
@@ -98,11 +178,14 @@ struct ExerciseSetView: View {
     func saveSet(){
         set.weight = numericWeight
         set.reps = numericReps
-        
+        set.warmUp = warmup
+        set.failure = failed
+        self.saved.toggle()
+        set.saved = self.saved
         if managedObjectContext.hasChanges {
             do{
                 try managedObjectContext.save()
-                self.saved.toggle()
+                
             }catch {
                 print(error)
             }

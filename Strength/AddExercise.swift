@@ -29,25 +29,31 @@ struct AddExercise: View {
             Form {
                 if(newExerciseForm == false){
                     Section(header: Text("Workout")){
-                        Picker("Workout", selection: $selectedExercise){
-                            ForEach(exercises.indices) { index in
-                                Text(exercises[index].name ?? "").tag(index)
-                            }
-                           
-                        }.pickerStyle(.wheel)
-                        Text("Selected: \(exercises[selectedExercise].name ?? "")")
+                        
+                        if exercises.count == 0 {
+                            Text("No saved exercises")
+                        } else {
+                            Picker("Workout", selection: $selectedExercise){
+                                ForEach(exercises.indices) { index in
+                                    Text(exercises[index].name ?? "").tag(index)
+                                }
+                               
+                            }.pickerStyle(.wheel)
+                        
+                            Text("Selected: \(exercises[selectedExercise].name ?? "")")
+                        }
                     }
                 }
-                
-                Button(action: {newExerciseForm.toggle()}, label:{
-                    HStack{
-                        Spacer()
-                        Text(newExerciseForm ? "Exercise Picker" : "Create New Exercise")
-                        Spacer()
-                    }
-                    
-                })
-                
+                if exercises.count != 0 {
+                    Button(action: {newExerciseForm.toggle()}, label:{
+                        HStack{
+                            Spacer()
+                            Text(newExerciseForm ? "Exercise Picker" : "Create New Exercise")
+                            Spacer()
+                        }
+                        
+                    })
+                }
                 if(newExerciseForm){
                     Section(header: Text("Name")) {
                         TextField("Enter Name", text: $name)
@@ -69,6 +75,15 @@ struct AddExercise: View {
             .alert(isPresented: $showValidationError, content: { () -> Alert in
                 Alert(title: Text("error"), message: Text(errorMessage), dismissButton: .default(Text("Okay")))
             })
+            .onAppear {
+                countExercises()
+            }
+        }
+    }
+    
+    func countExercises() {
+        if exercises.count == 0 {
+            newExerciseForm = true
         }
     }
     
