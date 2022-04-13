@@ -26,12 +26,19 @@ struct SummaryPage: View {
                                 ZStack {
                                     Rectangle()
                                        .foregroundColor(Color("ListItem"))
-                                       .cornerRadius(10)
-                                       .shadow(color: Color("Shadow"), radius: 3, x: 0, y: 3)
+                                       .cornerRadius(20)
+//                                       .shadow(color: Color("Shadow"), radius: 3, x: 0, y: 3)
+//                                       .border(Color("Shadow"), width: 2, cornerRadius: 10)
                                        .padding(.horizontal, -7)
                                        .padding(.vertical, -15)
+                                       .overlay(
+                                           Capsule(style: .continuous)
+                                            .stroke(Color("Shadow"), lineWidth: 2)
+                                            .padding(.horizontal, -7)
+                                            .padding(.vertical, -15))
                                     NavigationLink(destination: ExerciseStatsView(exerciseDetails: exercise)) {
                                         Text(exercise.name!)
+                                            
                                     }
                                 }
                                 Spacer(minLength: 20)

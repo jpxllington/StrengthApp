@@ -20,65 +20,88 @@ struct WorkoutHistoryView: View {
     }
     
     @State var showAlert: Bool = false
+    @State var calendar: Bool = false
+    
     
     var body: some View {
         NavigationView{
-            if workouts.count == 0 {
-                Text("No workout history found")
-                    .navigationTitle("Workout History")
+            if calendar {
+                CalendarView(sortDescriptor: NSSortDescriptor(keyPath: \Workout.started, ascending: false))
+                .navigationTitle("Workout History")
+                .toolbar{
+                    ToolbarItemGroup(placement: .navigationBarTrailing){
+                        Button(action: {calendar.toggle()}, label: {Image(systemName: calendar ? "calendar.circle" : "calendar.circle.fill")})
+                        
+                    }
+                }
             } else {
-                VStack {
-                    List{
-                        ForEach(workouts) { workout in
-                            
-                            VStack {
-                                Spacer(minLength: 15)
+                if workouts.count == 0 {
+                    Text("No workout history found")
+                        .navigationTitle("Workout History")
+                } else {
+                    VStack {
+                        List{
+                            ForEach(workouts) { workout in
+                                
+                                VStack {
+                                    Spacer(minLength: 15)
+                                    ZStack {
+                                        Rectangle()
+                                           .foregroundColor(Color("ListItem"))
+                                           .cornerRadius(20)
+    //                                       .shadow(color: Color("Shadow"), radius: 3, x: 0, y: 3)
+                                           .padding(-7)
+                                           .overlay(
+                                                RoundedRectangle(cornerRadius: 20)
+                                                .stroke(Color("Shadow"), lineWidth: 2)
+                                                .padding(-7)
+                                                )
+                                        WorkoutRow(workout:workout)
+                                    }
+                                    Spacer(minLength: 15)
+                                    
+                                }
+                                .listRowSeparator(.hidden)
+                            }.onDelete(perform: deleteWorkout)
+                            Button(action: {showAlert.toggle()}){
                                 ZStack {
                                     Rectangle()
-                                       .foregroundColor(Color("ListItem"))
+                                       .foregroundColor(.red)
                                        .cornerRadius(10)
-                                       .shadow(color: Color("Shadow"), radius: 3, x: 0, y: 3)
-                                       .padding(-7)
-                                    WorkoutRow(workout:workout)
+                                       .padding(-6)
+                                    HStack {
+                                        Spacer()
+                                        Text("Delete all workouts")
+                                        Spacer()
+                                    }
                                 }
-                                Spacer(minLength: 15)
-                                
                             }
                             .listRowSeparator(.hidden)
-                        }.onDelete(perform: deleteWorkout)
-                        Button(action: {showAlert.toggle()}){
-                            ZStack {
-                                Rectangle()
-                                   .foregroundColor(.red)
-                                   .cornerRadius(10)
-                                   .padding(-6)
-                                HStack {
-                                    Spacer()
-                                    Text("Delete all workouts")
-                                    Spacer()
-                                }
-                            }
+                        }.listStyle(.inset)
+                            
+                    }
+                    .navigationTitle("Workout History")
+                    .alert("Are you sure you want to delete all workouts?", isPresented: $showAlert){
+                        Button("Yes"){
+                            deleteAllWorkouts()
+                            showAlert.toggle()
                         }
-                        .listRowSeparator(.hidden)
-                    }.listStyle(.inset)
-                        
-                }
-                .navigationTitle("Workout History")
-                .alert("Are you sure you want to delete all workouts?", isPresented: $showAlert){
-                    Button("Yes"){
-                        deleteAllWorkouts()
-                        showAlert.toggle()
+                        Button("No"){
+                            showAlert.toggle()
+                        }
                     }
-                    Button("No"){
-                        showAlert.toggle()
+                    .background(Color.blue)
+                    .toolbar{
+                        ToolbarItemGroup(placement: .navigationBarTrailing){
+                            Button(action: {calendar.toggle()}, label: {Image(systemName: calendar ? "calendar.circle" : "calendar.circle.fill")})
+                            
+                        }
                     }
                 }
-                .background(Color.blue)
+                    
             }
-                
+            
         }
-        
-        
     }
     func deleteWorkout(at offsets: IndexSet){
         for index in offsets {

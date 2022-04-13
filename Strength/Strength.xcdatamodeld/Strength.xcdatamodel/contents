@@ -24,6 +24,7 @@
         <relationship name="exercise" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Exercise" inverseName="exerciseSets" inverseEntity="Exercise"/>
     </entity>
     <entity name="Template" representedClassName="Template" syncable="YES" codeGenerationType="class">
+        <attribute name="color" optional="YES" attributeType="String"/>
         <attribute name="created" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="lastUsed" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
@@ -55,7 +56,7 @@
         <element name="Exercise" positionX="-54" positionY="27" width="128" height="119"/>
         <element name="ExerciseDetails" positionX="-54" positionY="90" width="128" height="89"/>
         <element name="ExerciseSet" positionX="-36" positionY="45" width="128" height="134"/>
-        <element name="Template" positionX="-27" positionY="99" width="128" height="104"/>
+        <element name="Template" positionX="-27" positionY="99" width="128" height="119"/>
         <element name="TemplateExercise" positionX="-45" positionY="99" width="128" height="89"/>
         <element name="TemplateExerciseSet" positionX="-27" positionY="108" width="128" height="89"/>
         <element name="Workout" positionX="-63" positionY="-18" width="128" height="134"/>

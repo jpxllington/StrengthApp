@@ -40,16 +40,32 @@ struct ExerciseStatsView: View {
                     if chartType {
                         VStack{
                             LineChartView(data: totalVolume, title: "Total Volume", form: ChartForm.extraLarge, rateValue: 0, dropShadow: false)
-                            LineChartView(data: maxWeight, title: "Max Weight", form: ChartForm.extraLarge, rateValue: 0, dropShadow: false)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color("Shadow"), lineWidth: 2)
+                                    
+                                    )
+                            LineChartView(data: maxWeight, title: "Max Weight", form: ChartForm.extraLarge, rateValue: 0, dropShadow: false).overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                .stroke(Color("Shadow"), lineWidth: 2)
+                                
+                                )
                         }
-                    
                     } else {
                         VStack{
                             BarChartView(data: ChartData(points: totalVolumeGraph), title: "Total Volume", form: ChartForm.extraLarge, dropShadow: false)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color("Shadow"), lineWidth: 2)
+                                    
+                                    )
                             BarChartView(data: ChartData(points: maxWeightGraph), title: "Max Weight", form: ChartForm.extraLarge, dropShadow: false)
-                            
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color("Shadow"), lineWidth: 2)
+                                    
+                                    )
                         }
-                        
                     }
                     Spacer()
                     Divider()
@@ -75,6 +91,7 @@ struct ExerciseStatsView: View {
                 Spacer()
                 ForEach(exerciseToShow){exercise in
                     LastExerciseView(exercise: exercise)
+                        .padding()
                 }
             }
             .onAppear(perform: {
@@ -88,7 +105,7 @@ struct ExerciseStatsView: View {
                         Button(action: {chartType.toggle()}, label: {Image(systemName: chartType ? "chart.bar" : "chart.xyaxis.line")})
                     }
                 }
-        }
+            }
         }
     }
     
