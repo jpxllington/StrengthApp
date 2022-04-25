@@ -29,7 +29,7 @@ struct ExerciseSetView: View {
         self.set = set
         
         _exerciseSets = FetchRequest(
-            entity: ExerciseSet.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \ExerciseSet.order, ascending: true)], predicate: NSPredicate(format: "exercise == %@",set.exercise!))
+            entity: ExerciseSet.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \ExerciseSet.order, ascending: true)], predicate: NSPredicate(format: "exercise == %@",set.exercise! ))
     }
     
     

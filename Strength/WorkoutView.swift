@@ -60,7 +60,11 @@ struct WorkoutView: View {
                     Rectangle()
                         .foregroundColor(.red)
                         .frame(height: 50)
-                        .cornerRadius(5)
+                        .cornerRadius(10)
+//                        .overlay(
+//                             RoundedRectangle(cornerRadius: 10)
+//                             .stroke(Color("Shadow"), lineWidth: 2)
+//                             )
                     HStack {
                         Spacer()
                         Text("Delete Workout").onTapGesture {

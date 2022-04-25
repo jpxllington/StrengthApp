@@ -47,6 +47,12 @@ struct ContentView: View{
                     Image(systemName: "clock.fill")
                     Text("History")
                 }.tag(2)
+            
+            IntervalTimer()
+                .tabItem{
+                    Text("Interval Timer")
+                }.tag(4)
+      
                 
         }
         .tabViewStyle(backgroundColor: Color("Shadow").opacity(0.3),
