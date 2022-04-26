@@ -49,13 +49,13 @@ struct WorkoutHistoryView: View {
                                         Rectangle()
                                            .foregroundColor(Color("ListItem"))
                                            .cornerRadius(20)
-    //                                       .shadow(color: Color("Shadow"), radius: 3, x: 0, y: 3)
-                                           .padding(-7)
-                                           .overlay(
-                                                RoundedRectangle(cornerRadius: 20)
-                                                .stroke(Color("Shadow"), lineWidth: 2)
-                                                .padding(-7)
-                                                )
+                                           .shadow(color: Color("Shadow").opacity(0.1), radius: 3, x: 0, y: 3)
+                                           .padding(-8)
+//                                           .overlay(
+//                                                RoundedRectangle(cornerRadius: 20)
+//                                                .stroke(Color("Shadow"), lineWidth: 2)
+//                                                .padding(-7)
+//                                                )
                                         WorkoutRow(workout:workout)
                                     }
                                     Spacer(minLength: 15)
@@ -67,15 +67,17 @@ struct WorkoutHistoryView: View {
                                 ZStack {
                                     Rectangle()
                                        .foregroundColor(.red)
-                                       .cornerRadius(10)
+                                       .cornerRadius(20)
                                        .padding(-6)
                                     HStack {
                                         Spacer()
                                         Text("Delete all workouts")
+                                            .foregroundColor(.white)
                                         Spacer()
                                     }
                                 }
                             }
+                            Spacer(minLength: 120)
                             .listRowSeparator(.hidden)
                         }.listStyle(.inset)
                             

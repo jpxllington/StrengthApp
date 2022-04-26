@@ -71,7 +71,7 @@ struct IntervalTimer: View {
                                Rectangle()
                                   .foregroundColor(Color("SavedSet"))
                                   .cornerRadius(20)
-                                  .frame(width: screenSize.width * 0.8, height: screenSize.height * 0.3 )
+                                  .frame(width: screenSize.width * 0.8, height: screenSize.height * 0.2 )
                                   .overlay(
                                        RoundedRectangle(cornerRadius: 20)
                                        .stroke(Color("Shadow"), lineWidth: 2)
@@ -84,6 +84,7 @@ struct IntervalTimer: View {
                                }
                            }
                        }
+                       Spacer(minLength: 120)
                    }
                    .navigationBarTitle("New Interval Timer")
                } else {
@@ -102,7 +103,6 @@ struct IntervalTimer: View {
                                .animation(.easeInOut(duration: 0.8	), value: timeRemaining)
                            VStack {
                                Text("Time remaining:")
-                               Spacer()
                                Text("\(timeRemaining)")
                                    .onReceive(timer) { _ in
                                        if (timeRemaining == 0){
@@ -131,7 +131,6 @@ struct IntervalTimer: View {
                                .animation(.easeInOut(duration: 0.8    ), value: highTimeRemaining)
                            VStack {
                                Text("Time remaining:")
-                               Spacer()
                                Text("\(highTimeRemaining)")
                                    .onReceive(highTimer) { _ in
                                        if highTimeRemaining == 0{
@@ -161,7 +160,6 @@ struct IntervalTimer: View {
                                .animation(.easeInOut(duration: 0.8    ), value: lowTimeRemaining)
                            VStack {
                                Text("Time remaining:")
-                               Spacer()
                                Text("\(lowTimeRemaining)")
                                    .onReceive(lowTimer) { _ in
                                        if lowTimeRemaining == 0{

@@ -13,44 +13,61 @@ struct PreWorkoutSummaryView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @Binding var showSummary: Bool
     @Binding var navActive: Bool
+    @State var started: Bool = false
     
     var body: some View {
         
         NavigationView {
             
-            VStack {
+            VStack(alignment: .center) {
                 if template.exercises?.count == 0 {
                     Text("No Exercises Added")
                         .fontWeight(.semibold)
                     Text("Start workout to add exercises")
                         .fontWeight(.light)
                 }
-                ForEach(Array(template.exercises as? Set<TemplateExercise> ?? [] ), id: \.self) { exercise in
-                    HStack {
-                        Spacer()
-                        Text(String(exercise.templateExerciseSet!.count) + "x:" )
-                        Text(exercise.exerciseDetails!.name ?? "")
-                        Spacer()
-                        Text(exercise.exerciseDetails!.bodyPart ?? "")
-                        Spacer()
+                ZStack {
+                    
+                    
+                    VStack(alignment: .leading) {
+                        ForEach(Array(template.exercises as? Set<TemplateExercise> ?? [] ), id: \.self) { exercise in
+                            HStack {
+                                Text(String(exercise.templateExerciseSet!.count) + "x:" )
+                                Text(exercise.exerciseDetails!.name ?? "")
+                                
+                                
+                            }
+                            
+                        }
                     }
-                    Spacer()
+//                    .background(Color("ListItem"))
+//                        .cornerRadius(20)
+//                        .shadow(color: Color("Shadow").opacity(0.1), radius: 3, x: 0, y: 3)
+//                        .padding(-25)
+//                        .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
                 
             }
             .navigationBarTitle("Workout Overview")
             .navigationBarItems(leading: Button(action:{
                 self.showSummary = false
-                self.navActive.toggle()
+                
             }){Text("Cancel")}, trailing:
                 Button(action: {
-                newWorkout()
-                self.showSummary = false
-                
+                activateWorkout()
             }) {Text("Start")} )
         }
-//        .onAppear(perform: newWorkout)
-    
+        .onAppear(perform: {navActive = false})
+        .onDisappear(perform: {
+            if (!started){
+//                self.navActive.toggle()
+            }
+            })
+    }
+    func activateWorkout(){
+        newWorkout()
+        self.showSummary = false
+//        self.navActive = true
     }
     
     func newWorkout() {
@@ -76,6 +93,7 @@ struct PreWorkoutSummaryView: View {
         if managedObjectContext.hasChanges {
             do {
                 try managedObjectContext.save()
+                started = true
             } catch {
                 print(error)
             }

@@ -23,6 +23,7 @@ struct AddExercise: View {
     @FetchRequest(
         entity: ExerciseDetails.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \ExerciseDetails.name, ascending: true)]) var exercises: FetchedResults<ExerciseDetails>
 
+    let screenSize = UIScreen.main.bounds
     
     var body: some View {
         NavigationView {
@@ -39,6 +40,7 @@ struct AddExercise: View {
                                 }
                                
                             }.pickerStyle(.wheel)
+                                .frame(width: screenSize.width * 0.6)
                         
                             Text("Selected: \(exercises[selectedExercise].name ?? "")")
                         }
@@ -63,8 +65,9 @@ struct AddExercise: View {
                     }
                 }
             }
-            .navigationTitle("Add New Exercise")
-            .navigationBarItems(trailing:
+            .navigationTitle("Add New Exercise").font(.title3)
+            .navigationBarItems(leading: Button(action: {presentAddNewExercise = false}, label: {Text("Cancel")})
+                                    ,trailing:
                                     Button(action: {
                 self.validateData()
             }) {

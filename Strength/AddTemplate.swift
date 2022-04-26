@@ -10,8 +10,6 @@ import SwiftUI
 struct AddTemplate: View {
     @Binding var presentAddNewWorkout: Bool
     @Environment(\.managedObjectContext) var managedObjectContext
-    @Binding var tabSelection: Int
-    @Binding var activeWorkout: Bool
     @State var name: String = ""
     @State var notes: String = ""
     
@@ -69,6 +67,6 @@ struct AddTemplate: View {
 
 struct AddWorkout_Previews: PreviewProvider {
     static var previews: some View {
-        AddTemplate(presentAddNewWorkout: .constant(false), tabSelection: .constant(0), activeWorkout: .constant(false) )
+        AddTemplate(presentAddNewWorkout: .constant(false) )
     }
 }

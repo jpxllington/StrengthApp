@@ -29,9 +29,19 @@ struct TemplateList: View {
                 Color.blue
                 List{
                     ForEach(templates) { template in
-                        TemplateRow(template:template)
+                        ZStack {
+                            Rectangle()
+                                .foregroundColor(Color("ListItem"))
+                                .cornerRadius(20)
+                                .shadow(color: Color("Shadow").opacity(0.1), radius: 3, x: 0, y: 3)
+                            
+                            TemplateRow(template:template)
+                        }
                     }.onDelete(perform: deleteTemplate)
+                        .listRowSeparator(.hidden)
                 }
+                .listStyle(.inset)
+                
                 .background(Color.blue)
             }
         }

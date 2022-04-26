@@ -41,96 +41,129 @@ struct WorkoutView: View {
     
     var body: some View {
         
-        if workout.exercises?.count == 0 {
-                Text("No exercises added")
-            }
-        VStack{
-            
-            List{
-               ForEach(exercises) { exercise in
-                   ExerciseView(exercise: exercise)
-                       
-               }.onMove(perform: moveWorkout)
-                    .padding(.leading, self.editMode?.wrappedValue.isEditing ?? false ? -45 : 0)
-                    .listRowSeparator(.hidden)
-            }.listStyle(.inset)
-                
-            if(editMode?.wrappedValue.isEditing == true){
-                ZStack {
-                    Rectangle()
-                        .foregroundColor(.red)
-                        .frame(height: 50)
-                        .cornerRadius(10)
-//                        .overlay(
-//                             RoundedRectangle(cornerRadius: 10)
-//                             .stroke(Color("Shadow"), lineWidth: 2)
-//                             )
-                    HStack {
-                        Spacer()
-                        Text("Delete Workout").onTapGesture {
-                            showDeleteAlert.toggle()
-                        }.foregroundColor(.white)
-                        Spacer()
-                    }.frame(height: 50)
-                        
-                }
-              
-            }
-        }
-//        .background(Color.blue)
-        .navigationBarItems(trailing:
-            HStack(spacing: 20) {
-            if self.isTimerRunning {
-                Text(formatter.string(from: interval) ?? "")
-                    .onReceive(timer) {_ in
-                        interval = Date().timeIntervalSince(workoutStart)
-                }
-                Button(action: {showAlert.toggle()}, label: {Text("Finish")})
-                    .alert("Would you like to update the template?", isPresented: $showAlert){
-                        Button("Yes"){
-                            finishWorkout()
-                            updateTemplate()
-                        }
-                        Button("No"){
-                            finishWorkout()
-                        }
-                    }
-            } else if workout.finished != nil {
-                Text(calcDuration())
-                Spacer(minLength: 25)
-            }
-            EditButton()
-            Button(action: {
-                self.presentAddNewExercise.toggle()
-            }) {
-                Image(systemName: "plus.circle.fill")
-            }.sheet(isPresented: $presentAddNewExercise) {
-                AddExercise(workout:workout, presentAddNewExercise: self.$presentAddNewExercise)
-            }
-                    
-        })
-        .alert("Are you sure you want to delete this workout?", isPresented: $showDeleteAlert){
-            Button("Yes"){
-                deleteWorkout()
-                showDeleteAlert.toggle()
-            }
-            Button("No"){
-                showDeleteAlert.toggle()
-            }
-        }
-
-        .navigationBarTitle(workout.name ?? "")
-        .font(.subheadline)
         
-        .onAppear(perform: {if workout.workoutLive == true {
-            isTimerRunning = true
-            workoutStart = workout.started!
-            
+        ZStack {
+            VStack{
+                
+                if workout.exercises?.count == 0 {
+                        Text("No exercises added")
+                } else {
+                    List{
+                       ForEach(exercises) { exercise in
+                           ExerciseView(exercise: exercise)
+                               
+                       }.onMove(perform: moveWorkout)
+                            .padding(.leading, self.editMode?.wrappedValue.isEditing ?? false ? -45 : 0)
+                            .listRowSeparator(.hidden)
+                        if(editMode?.wrappedValue.isEditing == false){
+                            Spacer(minLength: 120)
+                        }
+                    }.listStyle(.inset)
+                }
+                    
+                if(editMode?.wrappedValue.isEditing == true){
+                    ZStack {
+                        Rectangle()
+                            .foregroundColor(.red)
+                            .frame(height: 50)
+                            .cornerRadius(10)
+    //                        .overlay(
+    //                             RoundedRectangle(cornerRadius: 10)
+    //                             .stroke(Color("Shadow"), lineWidth: 2)
+    //                             )
+                        HStack {
+                            Spacer()
+                            Text("Delete Workout").onTapGesture {
+                                showDeleteAlert.toggle()
+                            }.foregroundColor(.white)
+                            Spacer()
+                        }.frame(height: 50)
+                            
+                    }
+                    Spacer(minLength: 120)
+                }
+                
+            }
+            .onTapGesture(perform: {self.presentAddNewExercise = false})
+    //        .background(Color.blue)
+            .navigationBarItems(trailing:
+                HStack(spacing: 20) {
+                if self.isTimerRunning {
+                    Text(formatter.string(from: interval) ?? "")
+                        .onReceive(timer) {_ in
+                            interval = Date().timeIntervalSince(workoutStart)
+                    }
+                    Button(action: {showAlert.toggle()}, label: {Text("Finish")})
+                        .alert("Would you like to update the template?", isPresented: $showAlert){
+                            Button("Yes"){
+                                finishWorkout()
+                                updateTemplate()
+                            }
+                            Button("No"){
+                                finishWorkout()
+                            }
+                        }
+                        .disabled(presentAddNewExercise)
+                } else if workout.finished != nil {
+                    Text(calcDuration())
+                    Spacer(minLength: 25)
+                }
+                EditButton()
+                    .disabled(presentAddNewExercise)
+                Button(action: {
+                    withAnimation(.easeInOut(duration: 0.2)){
+                        self.presentAddNewExercise.toggle()
+                    }
+                }) {
+                    Image(systemName: "plus.circle.fill")
+                }.disabled(presentAddNewExercise)
+//                .sheet(isPresented: $presentAddNewExercise) {
+//                    AddExercise(workout:workout, presentAddNewExercise: self.$presentAddNewExercise)
+//                }
+//
+            })
+            .alert("Are you sure you want to delete this workout?", isPresented: $showDeleteAlert){
+                Button("Yes"){
+                    deleteWorkout()
+                    showDeleteAlert.toggle()
+                }
+                Button("No"){
+                    showDeleteAlert.toggle()
+                }
+            }
 
-        }})
-        .onDisappear(perform: {isTimerRunning = false
+            .navigationBarTitle(workout.name ?? "")
+            .font(.subheadline)
             
+            .onAppear(perform: {if workout.workoutLive == true {
+                isTimerRunning = true
+                workoutStart = workout.started!
+                
+
+            }})
+            .onDisappear(perform: {isTimerRunning = false
+                presentAddNewExercise = false
         })
+            
+            if (presentAddNewExercise) {
+                Rectangle()
+                    .foregroundColor(.gray.opacity(0.5))
+                    .ignoresSafeArea(.all)
+                    .onTapGesture(perform: {presentAddNewExercise.toggle()})
+//                    .cornerRadius(20)
+//                    .shadow(color: Color("Shadow").opacity(0.1), radius: 3, x: 0, y: 3)
+
+                VStack {
+                    AddExercise(workout: workout, presentAddNewExercise: self.$presentAddNewExercise )
+                        .frame(width: screenSize.width * 0.8 , height: screenSize.height * 0.6)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .opacity(presentAddNewExercise ? 1 : 0)
+                    .scaleEffect(presentAddNewExercise ? 1 : 0.5)
+                    .animation(.easeInOut(duration: 10), value: presentAddNewExercise)
+                    Spacer(minLength: 120)
+                }
+            }
+        }
     }
     
     func moveWorkout(from source: IndexSet, to destination: Int){

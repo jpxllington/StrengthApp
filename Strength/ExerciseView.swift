@@ -29,7 +29,7 @@ struct ExerciseView: View {
             Rectangle()
                 .foregroundColor(Color("ListItem"))
                 .cornerRadius(20)
-                .shadow(color: Color("Shadow"), radius: 4, x: 0, y: 3)
+                .shadow(color: Color("Shadow").opacity(0.4), radius: 5, x: 0, y: 3)
             HStack {
                 VStack {
                     HStack {

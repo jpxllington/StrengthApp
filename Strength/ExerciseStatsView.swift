@@ -42,30 +42,32 @@ struct ExerciseStatsView: View {
                             LineChartView(data: totalVolume, title: "Total Volume", form: ChartForm.extraLarge, rateValue: 0, dropShadow: false)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 20)
-                                    .stroke(Color("Shadow"), lineWidth: 2)
+                                        .stroke(Color("Shadow").opacity(0.3), lineWidth: 2)
                                     
                                     )
                             LineChartView(data: maxWeight, title: "Max Weight", form: ChartForm.extraLarge, rateValue: 0, dropShadow: false).overlay(
                                 RoundedRectangle(cornerRadius: 20)
-                                .stroke(Color("Shadow"), lineWidth: 2)
+                                    .stroke(Color("Shadow").opacity(0.3), lineWidth: 2)
                                 
                                 )
                         }
+                        .shadow(color: Color("Shadow").opacity(0.15), radius: 3, x: 0, y: 3)
                     } else {
                         VStack{
                             BarChartView(data: ChartData(points: totalVolumeGraph), title: "Total Volume", form: ChartForm.extraLarge, dropShadow: false)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 20)
-                                    .stroke(Color("Shadow"), lineWidth: 2)
+                                        .stroke(Color("Shadow").opacity(0.3), lineWidth: 2)
                                     
                                     )
                             BarChartView(data: ChartData(points: maxWeightGraph), title: "Max Weight", form: ChartForm.extraLarge, dropShadow: false)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 20)
-                                    .stroke(Color("Shadow"), lineWidth: 2)
+                                        .stroke(Color("Shadow").opacity(0.3), lineWidth: 2)
                                     
                                     )
                         }
+                        .shadow(color: Color("Shadow").opacity(0.15), radius: 3, x: 0, y: 3)
                     }
                     Spacer()
                     Divider()
@@ -93,12 +95,14 @@ struct ExerciseStatsView: View {
                     LastExerciseView(exercise: exercise)
                         .padding()
                 }
+                Spacer(minLength: 120)
             }
             .onAppear(perform: {
                 withAnimation(){
                     
                 }
             createArrays()})
+            .navigationTitle(exerciseDetails.name ?? "")
             .toolbar{
                 ToolbarItemGroup(placement: .navigationBarTrailing){
                     if timesExercised > 1 {
