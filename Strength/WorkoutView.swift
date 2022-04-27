@@ -55,8 +55,10 @@ struct WorkoutView: View {
                        }.onMove(perform: moveWorkout)
                             .padding(.leading, self.editMode?.wrappedValue.isEditing ?? false ? -45 : 0)
                             .listRowSeparator(.hidden)
+                           
                         if(editMode?.wrappedValue.isEditing == false){
                             Spacer(minLength: 120)
+                                .listRowSeparator(.hidden)
                         }
                     }.listStyle(.inset)
                 }
@@ -64,7 +66,7 @@ struct WorkoutView: View {
                 if(editMode?.wrappedValue.isEditing == true){
                     ZStack {
                         Rectangle()
-                            .foregroundColor(.red)
+                            .foregroundColor(Color("Failure"))
                             .frame(height: 50)
                             .cornerRadius(10)
     //                        .overlay(
@@ -133,7 +135,7 @@ struct WorkoutView: View {
             }
 
             .navigationBarTitle(workout.name ?? "")
-            .font(.subheadline)
+            .font(.subheadline).zIndex(-1)
             
             .onAppear(perform: {if workout.workoutLive == true {
                 isTimerRunning = true
@@ -150,16 +152,19 @@ struct WorkoutView: View {
                     .foregroundColor(.gray.opacity(0.5))
                     .ignoresSafeArea(.all)
                     .onTapGesture(perform: {presentAddNewExercise.toggle()})
+                    
 //                    .cornerRadius(20)
 //                    .shadow(color: Color("Shadow").opacity(0.1), radius: 3, x: 0, y: 3)
 
                 VStack {
                     AddExercise(workout: workout, presentAddNewExercise: self.$presentAddNewExercise )
-                        .frame(width: screenSize.width * 0.8 , height: screenSize.height * 0.6)
+//                        .frame(maxWidth: screenSize.width * 0.8 , maxHeight: (screenSize.height * 0.5))
                     .clipShape(RoundedRectangle(cornerRadius: 20))
                     .opacity(presentAddNewExercise ? 1 : 0)
                     .scaleEffect(presentAddNewExercise ? 1 : 0.5)
                     .animation(.easeInOut(duration: 10), value: presentAddNewExercise)
+                    .zIndex(1)
+                    .ignoresSafeArea(.keyboard)
                     Spacer(minLength: 120)
                 }
             }
@@ -229,14 +234,12 @@ struct WorkoutView: View {
             managedObjectContext.delete(exercise as! NSManagedObject)
         }
         for exercise in exercises {
-            print(exercise)
+            
             let newExercise = TemplateExercise(context: managedObjectContext)
             newExercise.exerciseDetails = exercise.exerciseDetails
             newExercise.displayOrder = exercise.displayOrder
             for exerciseSet in exercise.exerciseSets!  {
-//                    print(exerciseSet)
-//                    print((exerciseSet as AnyObject).weight)
-//                    print((exerciseSet as AnyObject).reps)
+
                 let newTemplateSet = TemplateExerciseSet(context: managedObjectContext)
                 newTemplateSet.weight = (exerciseSet as AnyObject).weight
                 newTemplateSet.reps = (exerciseSet as AnyObject).reps

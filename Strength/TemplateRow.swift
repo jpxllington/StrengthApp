@@ -22,10 +22,10 @@ struct TemplateRow: View {
                 Spacer()
                 Button(action: {self.showSummary.toggle()}){Image(systemName: "arrow.right").foregroundColor(.black)}
                 .sheet(isPresented: $showSummary){
-                    PreWorkoutSummaryView(template:template, showSummary: $showSummary, navActive:$navActive)
+                    PreWorkoutSummaryView(template:template, showSummary: $showSummary)
                 }
             }
-            .background(NavigationLink(destination: NewWorkoutPage(sortDescriptor: NSSortDescriptor(keyPath: \Workout.started, ascending: false)), isActive: $navActive ) {})
+//            .background(NavigationLink(destination: NewWorkoutPage(sortDescriptor: NSSortDescriptor(keyPath: \Workout.started, ascending: false)), isActive: $navActive ) {})
             .padding()
         
     }

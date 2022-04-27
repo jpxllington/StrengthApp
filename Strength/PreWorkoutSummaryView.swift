@@ -12,8 +12,8 @@ struct PreWorkoutSummaryView: View {
     @ObservedObject var template: Template
     @Environment(\.managedObjectContext) var managedObjectContext
     @Binding var showSummary: Bool
-    @Binding var navActive: Bool
-    @State var started: Bool = false
+    @State var navActive: Bool = false
+
     
     var body: some View {
         
@@ -29,17 +29,18 @@ struct PreWorkoutSummaryView: View {
                 ZStack {
                     
                     
-                    VStack(alignment: .leading) {
+                    List {
                         ForEach(Array(template.exercises as? Set<TemplateExercise> ?? [] ), id: \.self) { exercise in
-                            HStack {
-                                Text(String(exercise.templateExerciseSet!.count) + "x:" )
-                                Text(exercise.exerciseDetails!.name ?? "")
-                                
-                                
-                            }
-                            
+//                            HStack {
+//                                Text(String(exercise.templateExerciseSet!.count) + "x:" )
+//                                Text(exercise.exerciseDetails!.name ?? "")
+//
+//
+//                            }
+                            TemplateExerciseView(exercise: exercise).padding(.horizontal, 10)
                         }
-                    }
+                        .listRowSeparator(.hidden)
+                    }.listStyle(.inset)
 //                    .background(Color("ListItem"))
 //                        .cornerRadius(20)
 //                        .shadow(color: Color("Shadow").opacity(0.1), radius: 3, x: 0, y: 3)
@@ -48,6 +49,7 @@ struct PreWorkoutSummaryView: View {
                 }
                 
             }
+            .background(NavigationLink(destination: NewWorkoutPage(sortDescriptor: NSSortDescriptor(keyPath: \Workout.started, ascending: false)), isActive: $navActive ) {})
             .navigationBarTitle("Workout Overview")
             .navigationBarItems(leading: Button(action:{
                 self.showSummary = false
@@ -56,18 +58,15 @@ struct PreWorkoutSummaryView: View {
                 Button(action: {
                 activateWorkout()
             }) {Text("Start")} )
+            
         }
         .onAppear(perform: {navActive = false})
-        .onDisappear(perform: {
-            if (!started){
-//                self.navActive.toggle()
-            }
-            })
+       
     }
     func activateWorkout(){
         newWorkout()
-        self.showSummary = false
-//        self.navActive = true
+//        self.showSummary = false
+        self.navActive = true
     }
     
     func newWorkout() {
@@ -93,7 +92,6 @@ struct PreWorkoutSummaryView: View {
         if managedObjectContext.hasChanges {
             do {
                 try managedObjectContext.save()
-                started = true
             } catch {
                 print(error)
             }

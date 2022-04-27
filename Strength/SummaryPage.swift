@@ -48,6 +48,7 @@ struct SummaryPage: View {
 //                            .listRowBackground(Color.green)
                     }
                     .listStyle(.inset)
+                    .padding(.horizontal, 5)
                 .navigationTitle("Exercise Summaries")
                 
             }

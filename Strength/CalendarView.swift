@@ -45,6 +45,7 @@ struct CalendarView: View {
                     }label: {
                         Image(systemName: "chevron.left")
                             .font(.title2)
+                            .foregroundColor(.black)
                     }
                     Button {
                         withAnimation{
@@ -53,6 +54,7 @@ struct CalendarView: View {
                     }label: {
                         Image(systemName: "chevron.right")
                             .font(.title2)
+                            .foregroundColor(.black)
                     }
                 }
                 .padding(.horizontal)
@@ -74,12 +76,15 @@ struct CalendarView: View {
                         CardView(value: value)
                             .background(
                             Capsule()
-                                .fill(Color.pink)
+                                .fill(Color("TabIcon"))
                                 .padding(.horizontal, 8)
                                 .opacity(isSameDay(date1: value.date, date2: currentDate) ? 1 : 0)
+                                .scaleEffect(isSameDay(date1: value.date, date2: currentDate) ? 1 : 0)
                             )
                             .onTapGesture {
-                                currentDate = value.date
+                                withAnimation(.easeInOut(duration: 0.25)){
+                                    currentDate = value.date
+                                }
                             }
                     }
                 }
@@ -99,11 +104,11 @@ struct CalendarView: View {
                                        .cornerRadius(20)
 //                                       .shadow(color: Color("Shadow"), radius: 3, x: 0, y: 3)
                                        .padding(-7)
-                                       .overlay(
-                                            RoundedRectangle(cornerRadius: 20)
-                                            .stroke(Color("Shadow"), lineWidth: 2)
-                                            .padding(-7)
-                                            )
+//                                       .overlay(
+//                                            RoundedRectangle(cornerRadius: 20)
+//                                            .stroke(Color("Shadow"), lineWidth: 2)
+//                                            .padding(-7)
+//                                            )
                                     HStack{
                                         WorkoutRow(workout: workout)
                                             .foregroundColor(.black)
@@ -126,9 +131,11 @@ struct CalendarView: View {
 //                                )
                             }
                         }
+                        
                     } else {
                         Text("No Workout Found")
                     }
+                    Spacer(minLength: 120)
                 }
                 .padding()
                 
@@ -155,7 +162,7 @@ struct CalendarView: View {
                     Spacer()
                     
                     Circle()
-                        .fill(isSameDay(date1: workout.started!, date2: currentDate) ? .white : Color.pink)
+                        .fill(isSameDay(date1: workout.started!, date2: currentDate) ? .white : Color("TabIcon"))
                         .frame(width: 8, height: 8)
                 } else {
                     Text("\(value.day)")

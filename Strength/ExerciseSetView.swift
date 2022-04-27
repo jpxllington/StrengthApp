@@ -39,7 +39,7 @@ struct ExerciseSetView: View {
             VStack {
                 HStack{
                     Image(systemName: "gear").onTapGesture {
-                        withAnimation(menuVisible ? .none : .linear(duration: 0.1)){
+                        withAnimation(menuVisible ? .none : .linear(duration: 0.00)){
                             menuVisible.toggle()
                         }
                     }
@@ -47,16 +47,16 @@ struct ExerciseSetView: View {
                     ZStack {
                         Rectangle()
                             .cornerRadius(5)
-                            .foregroundColor(failed ? warmup ? Color.orange : Color.red : warmup ? Color.yellow : Color("ListItem"))
+                            .foregroundColor(failed ? warmup ? Color("WarmFail") : Color("Failure") : warmup ? Color("Warm") : saved ? Color("SavedSet").opacity(0) : Color("ListItem"))
                             .frame(width: 20)
                         Text(String(set.order))
-                    }
+                    }.onTapGesture{menuVisible.toggle()}
                     
                     Section(header: Text("Weight:")){
                         TextField(String(set.weight), text: $weight)
                             .keyboardType(.decimalPad)
                             .background(Color("TextFieldBackground"))
-                            .cornerRadius(5)
+                            .cornerRadius(15)
                             .multilineTextAlignment(.center)
                             .shadow(color: .gray, radius: 0, x: 0, y: 0)
                     }
@@ -64,7 +64,7 @@ struct ExerciseSetView: View {
                         TextField(String(set.reps), text: $reps)
                             .keyboardType(.decimalPad)
                             .background(Color("TextFieldBackground"))
-                            .cornerRadius(5)
+                            .cornerRadius(15)
                             .multilineTextAlignment(.center)
                             .shadow(color: Color("TextFieldBackground")	, radius: 0, x: 0, y: 0)
                     }
@@ -81,7 +81,7 @@ struct ExerciseSetView: View {
                     ZStack{
                         Rectangle()
                             .foregroundColor(Color("Background"))
-                            .cornerRadius(5)
+                            .cornerRadius(15)
                         VStack{
                             HStack{
                                Image(systemName: "xmark.bin.fill")
@@ -91,14 +91,14 @@ struct ExerciseSetView: View {
                                deleteSet()
                             }.padding(10)
                             HStack{
-                               Image(systemName: "xmark.bin.fill")
+                               Image(systemName: "flame")
                                Text("Show Exercise Summary")
                                Spacer()
                             }.onTapGesture {
                                 summarySheetVisible.toggle()
                             }.padding(10)
                             HStack{
-                               Image(systemName: "xmark.bin.fill")
+                               Image(systemName: "f.circle")
                                Text("Mark as Failed")
                                Spacer()
                             }.onTapGesture {
@@ -106,7 +106,7 @@ struct ExerciseSetView: View {
                                 failed.toggle()
                             }.padding(10)
                             HStack{
-                               Image(systemName: "xmark.bin.fill")
+                               Image(systemName: "w.circle")
                                Text("Mark as Warmup")
                                Spacer()
                             }.onTapGesture {
@@ -126,9 +126,12 @@ struct ExerciseSetView: View {
     }
     
     func prefill() {
-        self.reps = String(set.reps)
-        self.weight = String(set.weight)
+        
         self.saved = set.saved
+        if (saved) {
+            self.reps = String(set.reps)
+            self.weight = String(set.weight)
+        }
         self.failed = set.failure
         self.warmup = set.warmUp
     }

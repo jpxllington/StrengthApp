@@ -88,12 +88,14 @@ struct ExerciseStatsView: View {
                 Spacer()
                 Divider()
                 Spacer()
-                Text("Most Recent Exercise")
-                    .fontWeight(.semibold)
-                Spacer()
-                ForEach(exerciseToShow){exercise in
-                    LastExerciseView(exercise: exercise)
-                        .padding()
+                if exerciseToShow.count > 0{
+                    Text("Most Recent Exercise")
+                        .fontWeight(.semibold)
+                    Spacer()
+                    ForEach(exerciseToShow){exercise in
+                        LastExerciseView(exercise: exercise)
+                            .padding()
+                    }
                 }
                 Spacer(minLength: 120)
             }
@@ -156,9 +158,6 @@ struct ExerciseStatsView: View {
             exerciseList.append(exercise as! Exercise)
         }
         
-        print(exerciseDate.count)
-        print(totalVolume.count)
-        print(maxWeight.count)
         let offsets = exerciseDate.enumerated().sorted { $0.element > $1.element }.map { $0.offset }
         totalVolume = offsets.map {totalVolume[$0]}
         maxWeight = offsets.map {maxWeight[$0]}
@@ -167,11 +166,14 @@ struct ExerciseStatsView: View {
         var exerciseFound: Bool = false
         var index: Int = 0
         while !exerciseFound {
-            if exerciseList[index].workout?.finished != nil {
-                exerciseToShow.append(exerciseList[index])
-                exerciseFound = true
-            }
-            index += 1
+                if exerciseList[index].workout?.finished != nil {
+                    exerciseToShow.append(exerciseList[index])
+                    exerciseFound = true
+                }
+                index += 1
+                if index == exerciseList.count{
+                    exerciseFound = true
+                }
         }
         
         if exerciseDate.count < 10 {
@@ -189,10 +191,7 @@ struct ExerciseStatsView: View {
         heaviestSetString = String(heaviestSet)
         mostRecentExercise = formatter.string(from: exerciseDate.max()!)
         timesExercisedString = String(timesExercised)
-//        print(heaviestSetString)
-//               print(totalVolumeString)
-//               print(timesExercised)
-//               print(exerciseDate.max()!)
+
 
     }
 }

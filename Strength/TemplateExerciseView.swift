@@ -9,16 +9,16 @@ import SwiftUI
 import CoreData
 
 
-struct LastExerciseView: View {
+struct TemplateExerciseView: View {
 
-    @ObservedObject var exercise: Exercise
+    @ObservedObject var exercise: TemplateExercise
     @Environment(\.managedObjectContext) var managedObjectContext
 
-    @FetchRequest var exerciseSets: FetchedResults<ExerciseSet>
-    init(exercise: Exercise) {
+    @FetchRequest var exerciseSets: FetchedResults<TemplateExerciseSet>
+    init(exercise: TemplateExercise) {
         self.exercise = exercise
         _exerciseSets = FetchRequest(
-            entity: ExerciseSet.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \ExerciseSet.order, ascending: true)], predicate: NSPredicate(format: "exercise == %@",exercise))
+            entity: TemplateExerciseSet.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \TemplateExerciseSet.order, ascending: true)], predicate: NSPredicate(format: "templateExercise == %@",exercise))
     }
     
     var body: some View {
@@ -26,7 +26,8 @@ struct LastExerciseView: View {
             Rectangle()
                 .foregroundColor(Color("ListItem"))
                 .cornerRadius(20)
-                .shadow(color: Color("Shadow").opacity(0.25), radius: 4, x: 0, y: 3)
+                .shadow(color: Color("Shadow").opacity(0.4), radius: 5, x: 0, y: 3)
+                .onTapGesture(perform: {self.hideKeyboard()})
             HStack {
                 VStack {
                     HStack {
@@ -41,7 +42,7 @@ struct LastExerciseView: View {
                             ZStack {
                                 Rectangle()
                                     .cornerRadius(5)
-                                    .foregroundColor(exerciseSet.failure ? exerciseSet.warmUp ? Color("WarmFail") : Color("Failure") : exerciseSet.warmUp ? Color("Warm") : Color("ListItem"))
+                                    .foregroundColor(Color("ListItem"))
                                     .frame(width: 20)
                                 Text(String(exerciseSet.order))
                             }
@@ -49,7 +50,7 @@ struct LastExerciseView: View {
                             Section(header: Text("Weight:")){
                                 Text(String(exerciseSet.weight) )
                                     .keyboardType(.decimalPad)
-//                                    .background(Color("TextFieldBackground"))
+        //                                    .background(Color("TextFieldBackground"))
                                     .cornerRadius(5)
                                     .multilineTextAlignment(.center)
                                     .shadow(color: .gray, radius: 0, x: 0, y: 0)
@@ -58,23 +59,27 @@ struct LastExerciseView: View {
                             Section(header: Text("Reps:")){
                                 Text(String(exerciseSet.reps) )
                                     .keyboardType(.decimalPad)
-//                                    .background(Color("TextFieldBackground"))
+        //                                    .background(Color("TextFieldBackground"))
                                     .cornerRadius(5)
                                     .multilineTextAlignment(.center)
                                     .shadow(color: Color("TextFieldBackground")    , radius: 0, x: 0, y: 0)
                             }
                         }
                     }
+                    
                 }.padding()
                 .onTapGesture{
                     self.hideKeyboard()
                 }
             }
         }
+
     }
 }
 
-struct LastExerciseView_Previews: PreviewProvider {
+
+
+struct TemplateExerciseView_Previews: PreviewProvider {
     static let moc = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
     static var previews: some View {
     let pExercise = Exercise(context: moc)

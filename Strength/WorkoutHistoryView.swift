@@ -30,7 +30,7 @@ struct WorkoutHistoryView: View {
                 .navigationTitle("Workout History")
                 .toolbar{
                     ToolbarItemGroup(placement: .navigationBarTrailing){
-                        Button(action: {calendar.toggle()}, label: {Image(systemName: calendar ? "calendar.circle" : "calendar.circle.fill")})
+                        Button(action: {calendar.toggle()}, label: {Image(systemName: calendar ? "calendar.circle" : "calendar.circle.fill").foregroundColor(Color("TabIcon"))})
                         
                     }
                 }
@@ -66,7 +66,7 @@ struct WorkoutHistoryView: View {
                             Button(action: {showAlert.toggle()}){
                                 ZStack {
                                     Rectangle()
-                                       .foregroundColor(.red)
+                                       .foregroundColor(Color("Failure"))
                                        .cornerRadius(20)
                                        .padding(-6)
                                     HStack {
@@ -80,6 +80,7 @@ struct WorkoutHistoryView: View {
                             Spacer(minLength: 120)
                             .listRowSeparator(.hidden)
                         }.listStyle(.inset)
+                            .padding(.horizontal, 5)
                             
                     }
                     .navigationTitle("Workout History")
@@ -92,10 +93,10 @@ struct WorkoutHistoryView: View {
                             showAlert.toggle()
                         }
                     }
-                    .background(Color.blue)
+                    
                     .toolbar{
                         ToolbarItemGroup(placement: .navigationBarTrailing){
-                            Button(action: {calendar.toggle()}, label: {Image(systemName: calendar ? "calendar.circle" : "calendar.circle.fill")})
+                            Button(action: {calendar.toggle()}, label: {Image(systemName: calendar ? "calendar.circle" : "calendar.circle.fill").foregroundColor(Color("TabIcon"))})
                             
                         }
                     }

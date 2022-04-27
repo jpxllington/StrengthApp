@@ -17,4 +17,8 @@ struct StrengthApp: App {
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
+    
+    
 }
+
+

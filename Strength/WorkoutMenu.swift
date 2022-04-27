@@ -22,7 +22,7 @@ struct WorkoutMenu: View {
                     self.presentAddNewWorkout.toggle()
                         })
                         {
-                            Image(systemName: "plus.circle.fill")
+                            Image(systemName: "plus.circle.fill").foregroundColor(Color("TabIcon"))
                         }.sheet(isPresented: $presentAddNewWorkout) {
                             AddTemplate(presentAddNewWorkout: self.$presentAddNewWorkout).environment(\.managedObjectContext, self.managedObjectContext)
                             }

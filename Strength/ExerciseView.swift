@@ -30,6 +30,7 @@ struct ExerciseView: View {
                 .foregroundColor(Color("ListItem"))
                 .cornerRadius(20)
                 .shadow(color: Color("Shadow").opacity(0.4), radius: 5, x: 0, y: 3)
+                .onTapGesture(perform: {self.hideKeyboard()})
             HStack {
                 VStack {
                     HStack {
@@ -60,8 +61,9 @@ struct ExerciseView: View {
                         Image(systemName: "plus")
                         Spacer()
                     }
+                    
                     .onTapGesture {
-                        withAnimation(.linear(duration: 0.1)){
+                        withAnimation(.linear(duration: 0.0)){
                             addSet()
                         }
                     }
