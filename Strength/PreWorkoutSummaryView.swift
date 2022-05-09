@@ -21,10 +21,13 @@ struct PreWorkoutSummaryView: View {
             
             VStack(alignment: .center) {
                 if template.exercises?.count == 0 {
+                    Spacer()
                     Text("No Exercises Added")
                         .fontWeight(.semibold)
+                    Spacer()
                     Text("Start workout to add exercises")
                         .fontWeight(.light)
+                    Spacer()
                 }
                 ZStack {
                     

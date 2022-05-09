@@ -29,20 +29,21 @@ struct AddExercise: View {
         ZStack{
             Rectangle()
                 .foregroundColor(Color("AddExercise"))
-                .frame(maxHeight: newExerciseForm ? screenSize.height * 0.4 : screenSize.height * 0.5)
+                .frame(height: newExerciseForm ? 300 : 400)
                 .frame(width: screenSize.width * 0.85)
                 .onTapGesture(perform: {self.hideKeyboard()})
             VStack{
                 HStack(alignment: .top){
                     Button(action: {presentAddNewExercise = false }, label: {Text("Cancel")})
                     Spacer()
-                    Text("Add Exercise").font(.title2)
+                    Text("Add Exercise")
                     Spacer()
                     Button(action: {validateData()}, label: {Text("Add")})
-                }.padding(.horizontal, 20)
+                }.padding(.horizontal, 10)
                     .padding(.vertical, 25)
                     .frame(width: screenSize.width * 0.8)
                     .foregroundColor(.white)
+                    .font(.title2)
                 
                 if exercises.count != 0 {
                     Button(action: {
@@ -58,8 +59,7 @@ struct AddExercise: View {
                         }.padding(.vertical,5).foregroundColor(.white).background(Color("TabBar")).clipShape(RoundedRectangle(cornerRadius: 10))
                     }).frame(width: screenSize.width * 0.8)
                 }
-                Spacer()
-                if(newExerciseForm == false){
+                                if(newExerciseForm == false){
                     if exercises.count == 0 {
                         Text("No Saved Exercises")
                     } else{
@@ -70,7 +70,7 @@ struct AddExercise: View {
                             }.foregroundColor(.black)
                         }.pickerStyle(.wheel).background(Color("TextFieldBackground").clipShape(RoundedRectangle(cornerRadius: 15)))
                         Text("Selected: \(exercises[selectedExercise].name ?? "")").foregroundColor(.white)
-//                        Spacer()
+//
                     }
                 }
                 if(!newExerciseForm){
@@ -97,7 +97,7 @@ struct AddExercise: View {
                 }
                 
             }
-                .frame(maxHeight: newExerciseForm ? screenSize.height * 0.4 : screenSize.height * 0.5)
+            .frame(height: newExerciseForm ? 300 : 400)
                 .frame(width: screenSize.width * 0.8)
                 .onTapGesture(perform: {self.hideKeyboard()})
             .alert(isPresented: $showValidationError, content: { () -> Alert in

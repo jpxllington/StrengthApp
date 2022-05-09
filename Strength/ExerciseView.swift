@@ -54,14 +54,16 @@ struct ExerciseView: View {
 //                            .animation(Animation.easeOut(duration: 0.6).delay(0.5), value: showListItems)
 //                        Divider()
                     }
-                    
-                    HStack{
-                        Spacer()
-                        Text("Add Set")
-                        Image(systemName: "plus")
-                        Spacer()
+                    ZStack{
+                        Rectangle()
+                            .foregroundColor(Color("ListItem"))
+                        HStack{
+                            Spacer()
+                            Text("Add Set")
+                            Image(systemName: "plus")
+                            Spacer()
+                        }
                     }
-                    
                     .onTapGesture {
                         withAnimation(.linear(duration: 0.0)){
                             addSet()

@@ -83,9 +83,9 @@ struct ContentView: View{
                                 .renderingMode(.template)
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 25, height: 25)
-                                .foregroundColor(selection == image ? Color("TabIcon") : Color.white)
+                                .foregroundColor(selection == image ? Color("TabBar") : Color.white)
                                 .padding(selection == image ? 15 : 0)
-                                .background(Color("TabBar").opacity(selection == image ? 1 : 0).clipShape(Circle()).shadow(color: Color("Shadow").opacity(0.25), radius: 2, x: 0, y: 8))
+                                .background(Color("TabIcon").opacity(selection == image ? 1 : 0).clipShape(Circle()).shadow(color: Color("Shadow").opacity(0.25), radius: 2, x: 0, y: 8))
                                 
 //                                .matchedGeometryEffect(id: Image, in: animation)
                                 .offset(x: selection == image ? (reader.frame(in: .global).minX - reader.frame(in: .global).midX) : 0, y: selection == image ? -50 : 0)
